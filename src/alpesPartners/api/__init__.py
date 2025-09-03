@@ -8,13 +8,13 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 def registrar_handlers():
-    import alpesPartners.modulos.cliente.aplicacion
-    import alpesPartners.modulos.vuelos.aplicacion
+    import alpespartners.modulos.marca.aplicacion
+    import alpespartners.modulos.afiliaciones.aplicacion
 
 
 def importar_modelos_alchemy():
-    import alpesPartners.modulos.cliente.infraestructura.dto
-    import alpesPartners.modulos.vuelos.infraestructura.dto
+    import alpespartners.modulos.marca.infraestructura.dto
+    import alpespartners.modulos.afiliaciones.infraestructura.dto
 
 
 def comenzar_consumidor():
@@ -25,16 +25,16 @@ def comenzar_consumidor():
     """
 
     import threading
-    import alpesPartners.modulos.cliente.infraestructura.consumidores as cliente
-    import alpesPartners.modulos.vuelos.infraestructura.consumidores as vuelos
+    import alpespartners.modulos.marca.infraestructura.consumidores as marca
+    import alpespartners.modulos.afiliaciones.infraestructura.consumidores as afiliaciones
 
     # Suscripción a eventos
-    threading.Thread(target=cliente.suscribirse_a_eventos).start()
-    threading.Thread(target=vuelos.suscribirse_a_eventos).start()
+    threading.Thread(target=marca.suscribirse_a_eventos).start()
+    threading.Thread(target=afiliaciones.suscribirse_a_eventos).start()
 
     # Suscripción a comandos
-    threading.Thread(target=cliente.suscribirse_a_comandos).start()
-    threading.Thread(target=vuelos.suscribirse_a_comandos).start()
+    threading.Thread(target=marca.suscribirse_a_comandos).start()
+    threading.Thread(target=afiliaciones.suscribirse_a_comandos).start()
 
 
 def create_app(configuracion={}):
@@ -50,7 +50,7 @@ def create_app(configuracion={}):
     app.config['TESTING'] = configuracion.get('TESTING')
 
     # Inicializa la DB
-    from alpesPartners.config.db import init_db, db
+    from alpespartners.config.db import init_db, db
 
     init_db(app)
     importar_modelos_alchemy()
@@ -62,12 +62,12 @@ def create_app(configuracion={}):
             comenzar_consumidor()
 
      # Importa Blueprints
-    from . import cliente
-    from . import vuelos
+    from . import marca
+    from . import afiliaciones
 
     # Registro de Blueprints
-    app.register_blueprint(cliente.bp)
-    app.register_blueprint(vuelos.bp)
+    app.register_blueprint(marca.bp)
+    app.register_blueprint(afiliaciones.bp)
 
     @app.route("/spec")
     def spec():

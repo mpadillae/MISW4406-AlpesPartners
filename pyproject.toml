@@ -2,9 +2,11 @@
 name = "alpesPartners"
 version = "1.0.0"
 authors = [
-  { name="Juan Urrego", email="js.urrego110@uniandes.edu.co" },
+  { name="Miguel Fernando Padilla Espino", email="m.padillae@uniandes.edu.co" },
+  { name="Johann Sebastian Páez Campos", email="js.paezc1@uniandes.edu.co" },
+  { name="Julián Oliveros Forero", email="je.oliverosf@uniandes.edu.co" },
 ]
-description = "Proyecto de ejemplo de AlpesPartners"
+description = "Proyecto del curso de diseño y construcción de soluciones no monolíticas"
 readme = "README.md"
 requires-python = ">=3.12"
 

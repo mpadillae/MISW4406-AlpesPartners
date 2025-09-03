@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from alpesPartners.seedwork.dominio.entidades import AgregacionRaiz
+from alpespartners.seedwork.dominio.entidades import AgregacionRaiz
 from pydispatch import dispatcher
 
 import pickle
@@ -79,7 +79,7 @@ def is_flask():
         return False
 
 def registrar_unidad_de_trabajo(serialized_obj):
-    from alpesPartners.config.uow import UnidadTrabajoSQLAlchemy
+    from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
     from flask import session
     
 
@@ -87,7 +87,7 @@ def registrar_unidad_de_trabajo(serialized_obj):
 
 def flask_uow():
     from flask import session
-    from alpesPartners.config.uow import UnidadTrabajoSQLAlchemy
+    from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
     if session.get('uow'):
         return session['uow']
     else:

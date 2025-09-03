@@ -42,7 +42,7 @@ services:
   alpespartners:
     build:
       context: .
-      dockerfile: alpesPartners.Dockerfile
+      dockerfile: src/alpespartners/Dockerfile
     container_name: alpespartners-api
     hostname: alpespartners-api
     restart: on-failure
@@ -71,7 +71,7 @@ services:
   notificaciones:
     build:
       context: .
-      dockerfile: notificacion.Dockerfile
+      dockerfile: src/notificaciones/Dockerfile
     container_name: notificaciones-service
     hostname: notificaciones-service
     restart: on-failure

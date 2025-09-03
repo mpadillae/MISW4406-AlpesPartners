@@ -5,8 +5,8 @@ En este archivo usted encontrará las diferentes pruebas de validacióm para los
 """
 
 import pytest
-from alpesPartners.seedwork.dominio.mixins import ValidarReglasMixin
-from alpesPartners.seedwork.dominio.excepciones import (
+from alpespartners.seedwork.dominio.mixins import ValidarReglasMixin
+from alpespartners.seedwork.dominio.excepciones import (
     ReglaNegocioExcepcion)
 
 """

@@ -4,9 +4,9 @@ import tempfile
 import pytest
 import json
 
-from alpesPartners.api import create_app, importar_modelos_alchemy
-from alpesPartners.config.db import init_db
-from alpesPartners.config.db import db
+from alpespartners.api import create_app, importar_modelos_alchemy
+from alpespartners.config.db import init_db
+from alpespartners.config.db import db
 
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def app():
 
     # create the database and load test data
     with app.app_context():
-        from alpesPartners.config.db import db
+        from alpespartners.config.db import db
 
         importar_modelos_alchemy()
         db.create_all()

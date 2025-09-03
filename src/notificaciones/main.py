@@ -16,19 +16,19 @@ class EventoIntegracion(Record):
     datacontenttype = String()
     service_name = String()
 
-class ReservaCreadaPayload(Record):
-    id_reserva = String()
-    id_cliente = String()
+class CampanaCreadaPayload(Record):
+    id_campana = String()
+    id_marca = String()
     estado = String()
     fecha_creacion = Long()
 
-class EventoReservaCreada(EventoIntegracion):
-    data = ReservaCreadaPayload()
+class EventoCampanaCreada(EventoIntegracion):
+    data = CampanaCreadaPayload()
 
 HOSTNAME = os.getenv('PULSAR_ADDRESS', default="localhost")
 
 client = pulsar.Client(f'pulsar://{HOSTNAME}:6650')
-consumer = client.subscribe('eventos-reserva', consumer_type=_pulsar.ConsumerType.Shared, subscription_name='sub-notificacion-eventos-reservas', schema=AvroSchema(EventoReservaCreada))
+consumer = client.subscribe('eventos-campana', consumer_type=_pulsar.ConsumerType.Shared, subscription_name='sub-notificacion-eventos-campanas', schema=AvroSchema(EventoCampanaCreada))
 
 while True:
     msg = consumer.receive()
@@ -36,7 +36,7 @@ while True:
     print("Mensaje Recibido: '%s'" % msg.value().data)
     print('=========================================')
 
-    print('==== Envía correo a usuario ====')
+    print('==== Envía correo a marca ====')
 
     consumer.acknowledge(msg)
 
