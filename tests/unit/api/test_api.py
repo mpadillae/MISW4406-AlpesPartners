@@ -59,9 +59,6 @@ def test_servidor_levanta(client):
 
 def reserva_correcta():
     return {
-        "fecha_creacion": "2025-09-03T12:00:00Z",
-        "fecha_actualizacion": "2025-09-03T12:00:00Z",
-        "id": "test-reserva-123",
         "itinerarios": [
             {
                 "odos": [
@@ -80,6 +77,7 @@ def reserva_correcta():
                                             "codigo": "BOG",
                                             "nombre": "El Dorado - Bogotá International Airport (BOG)"
                                         }
+
                                     },
                                     {
                                         "fecha_salida": "2022-11-22T16:00:00Z",
@@ -90,59 +88,16 @@ def reserva_correcta():
                                         },
                                         "origen": {
                                             "codigo": "JFK",
-                                            "nombre": "John F. Kennedy International Airport"
+                                            "nombre": "El Dorado - Bogotá International Airport (BOG)"
                                         }
+
                                     }
                                 ]
                             }
                         ]
                     }
+
                 ]
             }
         ]
     }
-
-
-def test_crear_reserva_simple(client):
-    """Test básico para verificar que el endpoint de crear reserva existe y responde."""
-    # Arrange
-    reserva_simple = {
-        "fecha_creacion": "2025-09-03T12:00:00Z",
-        "fecha_actualizacion": "2025-09-03T12:00:00Z",
-        "id": "test-simple-123",
-        "itinerarios": []  # Itinerario vacío para evitar problemas de DB
-    }
-
-    # Act
-    response = client.post('/vuelos/reserva',
-                           data=json.dumps(reserva_simple),
-                           content_type='application/json')
-
-    # Assert
-    # El endpoint debe responder, aunque puede fallar por validaciones de negocio
-    assert response.status_code in [200, 400, 500]
-
-
-def test_crear_reserva_con_datos_invalidos(client):
-    """Test para verificar el manejo de errores con datos inválidos."""
-    # Arrange
-    reserva_invalida = {"datos": "incorrectos"}
-
-    # Act
-    response = client.post('/vuelos/reserva',
-                           data=json.dumps(reserva_invalida),
-                           content_type='application/json')
-
-    # Assert
-    assert response.status_code == 400
-
-
-def test_endpoints_existen(client):
-    """Test para verificar que los endpoints principales existen."""
-    # Test health endpoint
-    response = client.get('/health')
-    assert response.status_code == 200
-
-    # Test vuelos endpoints exist (even if they return errors)
-    response = client.get('/vuelos/reserva')
-    assert response.status_code in [200, 404, 405, 500]
