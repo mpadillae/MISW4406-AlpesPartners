@@ -7,7 +7,6 @@ services:
   # Pulsar standalone - Incluye ZooKeeper, BookKeeper y Broker en un solo contenedor
   pulsar:
     image: apachepulsar/pulsar:latest
-    profiles: ["pulsar"]
     container_name: pulsar
     hostname: pulsar
     restart: on-failure
@@ -38,3 +37,51 @@ services:
       timeout: 10s
       retries: 30
       start_period: 60s
+
+  # AlpesPartners Flask API
+  alpespartners:
+    build:
+      context: .
+      dockerfile: alpesPartners.Dockerfile
+    container_name: alpespartners-api
+    hostname: alpespartners-api
+    restart: on-failure
+    networks:
+      - pulsar
+    ports:
+      - "5001:5000"  # Flask app port (changed to avoid conflicts)
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - BROKER_HOST=pulsar
+    depends_on:
+      pulsar:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    working_dir: /app
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  # Servicio de Notificaciones
+  notificaciones:
+    build:
+      context: .
+      dockerfile: notificacion.Dockerfile
+    container_name: notificaciones-service
+    hostname: notificaciones-service
+    restart: on-failure
+    networks:
+      - pulsar
+    environment:
+      - PULSAR_ADDRESS=pulsar
+    depends_on:
+      pulsar:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    working_dir: /app
