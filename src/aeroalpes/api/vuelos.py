@@ -17,6 +17,7 @@ bp = api.crear_blueprint('vuelos', '/vuelos')
 @bp.route('/reserva', methods=('POST',))
 def reservar():
     try:
+        session.clear()
         reserva_dict = request.json
 
         map_reserva = MapeadorReservaDTOJson()

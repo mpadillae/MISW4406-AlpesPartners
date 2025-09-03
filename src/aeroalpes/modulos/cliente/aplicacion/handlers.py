@@ -8,6 +8,7 @@ class HandlerReservaDominio(Handler):
     @staticmethod
     def handle_reserva_creada(evento):
         print('================ RESERVA CREADA ===========')
+        print('================ HOLA DESDE MODULO DE CLIENTE ===========')
         
 
     
