@@ -14,7 +14,8 @@ from .dto import Campana as CampanaDTO
 from .mapeadores import MapeadorCampana
 from uuid import UUID
 
-class RepositorioInfluencersSQLite(RepositorioInfluencers):
+
+class RepositorioInfluencersPostgresql(RepositorioInfluencers):
 
     def obtener_por_id(self, id: UUID) -> Influencer:
         raise NotImplementedError
@@ -27,7 +28,7 @@ class RepositorioInfluencersSQLite(RepositorioInfluencers):
             numero_seguidores=NumeroSeguidores(50000),
             engagement_rate=EngagementRate(3.5)
         )
-        
+
         influencer = Influencer(
             nombre=NombreInfluencer("Ana García"),
             email=EmailInfluencer("ana@email.com"),
@@ -48,7 +49,7 @@ class RepositorioInfluencersSQLite(RepositorioInfluencers):
         raise NotImplementedError
 
 
-class RepositorioCampanasSQLite(RepositorioCampanas):
+class RepositorioCampanasPostgresql(RepositorioCampanas):
 
     def __init__(self):
         self._fabrica_afiliaciones: FabricaAfiliaciones = FabricaAfiliaciones()

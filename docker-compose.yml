@@ -54,8 +54,15 @@ services:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
       - BROKER_HOST=pulsar
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-admin}
+      - DB_HOST=postgres
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-alpespartners}
     depends_on:
       pulsar:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     volumes:
       - .:/app
@@ -85,3 +92,24 @@ services:
     volumes:
       - .:/app
     working_dir: /app
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    restart: on-failure
+    networks:
+      - pulsar
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-admin}
+      - POSTGRES_DB=${DB_NAME:-alpespartners}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+

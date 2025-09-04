@@ -37,12 +37,20 @@ def comenzar_consumidor():
     threading.Thread(target=afiliaciones.suscribirse_a_comandos).start()
 
 
+def get_standard_postgres_connection() -> str:
+    db_user = os.environ["DB_USER"]
+    db_password = os.environ["DB_PASSWORD"]
+    db_host = os.environ["DB_HOST"]
+    db_port = os.environ["DB_PORT"]
+    db_name = os.environ["DB_NAME"]
+
+    return f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+
 def create_app(configuracion={}):
-    # Init la aplicacion de Flask
     app = Flask(__name__, instance_relative_config=True)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = get_standard_postgres_connection()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.secret_key = '9d58f98f-3ae8-4149-a09f-3a8c2012e32c'
