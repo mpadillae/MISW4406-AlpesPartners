@@ -10,7 +10,7 @@ Este repositorio está basado en el repositorio de sidecars visto en el tutorial
 
 La arquitectura del sistema está compuesta por dos servicios principales que se comunican de forma asíncrona a través de un broker de mensajes (Pulsar):
 
-<img width="3228" height="387" alt="Arquitectura del Sistema" src="https://github.com/user-attachments/assets/673a55e4-4d0b-47f7-baad-42a85d89b64d" />
+<img width="765" height="395" alt="diagrama" src="https://github.com/user-attachments/assets/8b14d2d1-b6d5-4360-b03d-99495a318c7b" />
 
 ### Componentes de la Arquitectura
 
