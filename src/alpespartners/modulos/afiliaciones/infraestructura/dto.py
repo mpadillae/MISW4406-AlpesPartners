@@ -35,6 +35,8 @@ class Campana(db.Model):
     __tablename__ = "campanas"
     id = db.Column(db.String, primary_key=True)
     nombre = db.Column(db.String, nullable=False)
+    objetivo = db.Column(db.String, nullable=False)
+    audiencia_objetivo = db.Column(db.String, nullable=False)
     descripcion = db.Column(db.String, nullable=False)
     fecha_inicio = db.Column(db.DateTime, nullable=False)
     fecha_fin = db.Column(db.DateTime, nullable=False)

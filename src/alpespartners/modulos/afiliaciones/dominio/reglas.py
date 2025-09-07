@@ -5,7 +5,8 @@ En este archivo usted encontrará reglas de negocio del dominio de afiliaciones 
 """
 
 from alpespartners.seedwork.dominio.reglas import ReglaNegocio
-from .objetos_valor import Influencer, PresupuestoCampana
+from .entidades import Influencer
+from .objetos_valor import PresupuestoCampana
 from datetime import datetime
 
 

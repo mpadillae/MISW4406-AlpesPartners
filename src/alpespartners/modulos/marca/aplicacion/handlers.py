@@ -8,7 +8,8 @@ class HandlerCampanaDominio(Handler):
     @staticmethod
     def handle_campana_creada(evento):
         print('================ CAMPAÑA CREADA ===========')
-        print('================ HOLA DESDE MODULO DE MARCA ===========')
+        print("Evento recibido en modulo de marca:")
+        print(evento)
         
 
     

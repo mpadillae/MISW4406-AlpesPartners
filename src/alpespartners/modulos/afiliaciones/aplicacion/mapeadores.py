@@ -1,6 +1,6 @@
 from alpespartners.seedwork.aplicacion.dto import Mapeador as AppMap
 from alpespartners.seedwork.dominio.repositorios import Mapeador as RepMap
-from alpespartners.modulos.afiliaciones.dominio.entidades import Campana, Influencer, RedSocial, Contenido
+from alpespartners.modulos.afiliaciones.dominio.entidades import Campana, Influencer as InfluencerEntity, RedSocial as RedSocialEntity, Contenido
 from alpespartners.modulos.afiliaciones.dominio.objetos_valor import *
 from .dto import CampanaDTO, InfluencerDTO, RedSocialDTO, ContenidoDTO, MetricaDTO
 from datetime import datetime
@@ -68,7 +68,7 @@ class MapeadorCampanaDTOJson(AppMap):
 
 class MapeadorCampana(RepMap):
 
-    def _procesar_influencer_dto(self, influencer_dto: InfluencerDTO) -> Influencer:
+    def _procesar_influencer_dto(self, influencer_dto: InfluencerDTO) -> InfluencerEntity:
         redes_sociales = []
         for red_dto in influencer_dto.redes_sociales:
             red = RedSocial(
@@ -79,7 +79,7 @@ class MapeadorCampana(RepMap):
             )
             redes_sociales.append(red)
 
-        return Influencer(
+        influencer = InfluencerEntity(
             nombre=NombreInfluencer(influencer_dto.nombre),
             email=EmailInfluencer(influencer_dto.email),
             categoria=CategoriaInfluencer(influencer_dto.categoria),
@@ -88,7 +88,9 @@ class MapeadorCampana(RepMap):
             redes_sociales=redes_sociales
         )
 
-    def _procesar_influencer_entidad(self, influencer: Influencer) -> InfluencerDTO:
+        return influencer
+
+    def _procesar_influencer_entidad(self, influencer: InfluencerEntity) -> InfluencerDTO:
         redes_dto = []
         for red in influencer.redes_sociales:
             red_dto = RedSocialDTO(
@@ -139,26 +141,29 @@ class MapeadorCampana(RepMap):
         )
 
     def dto_a_entidad(self, dto: CampanaDTO) -> Campana:
-        campana = Campana()
-        campana.fecha_creacion = dto.fecha_creacion
-        campana.fecha_actualizacion = dto.fecha_actualizacion
-        campana.id = dto.id
-        campana.nombre = NombreCampana(dto.nombre)
-        campana.descripcion = DescripcionCampana(dto.descripcion)
-        campana.presupuesto = PresupuestoCampana(dto.presupuesto)
-        campana.objetivo = ObjetivoCampana(dto.objetivo)
-        campana.audiencia_objetivo = AudienciaObjetivo(dto.audiencia_objetivo)
-        
-        # Parse dates
+        fecha_inicio = None
+        fecha_fin = None
         if dto.fecha_inicio:
-            campana.fecha_inicio = FechaInicio(datetime.fromisoformat(dto.fecha_inicio.replace('Z', '+00:00')))
+            fecha_inicio = FechaInicio(datetime.fromisoformat(dto.fecha_inicio.replace('Z', '+00:00')))
         if dto.fecha_fin:
-            campana.fecha_fin = FechaFin(datetime.fromisoformat(dto.fecha_fin.replace('Z', '+00:00')))
-        
-        campana.hashtags = [Hashtag(tag) for tag in dto.hashtags]
-        campana.influencers = []
+            fecha_fin = FechaFin(datetime.fromisoformat(dto.fecha_fin.replace('Z', '+00:00')))
+
+        hashtags = [Hashtag(tag) for tag in dto.hashtags]
+        influencers = []
 
         for inf_dto in dto.influencers:
-            campana.influencers.append(self._procesar_influencer_dto(inf_dto))
+            influencers.append(self._procesar_influencer_dto(inf_dto))
+
+        campana = Campana(
+            nombre=NombreCampana(dto.nombre),
+            descripcion=DescripcionCampana(dto.descripcion),
+            fecha_inicio=fecha_inicio if fecha_inicio else FechaInicio(),
+            fecha_fin=fecha_fin if fecha_fin else FechaFin(),
+            presupuesto=PresupuestoCampana(dto.presupuesto),
+            objetivo=ObjetivoCampana(dto.objetivo),
+            audiencia_objetivo=AudienciaObjetivo(dto.audiencia_objetivo),
+            hashtags=hashtags,
+            influencers=influencers
+        )
 
         return campana

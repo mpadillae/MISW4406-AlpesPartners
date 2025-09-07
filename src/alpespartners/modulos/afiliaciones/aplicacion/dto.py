@@ -17,6 +17,7 @@ class InfluencerDTO(DTO):
     precio_por_post: float
     redes_sociales: list[RedSocialDTO]
     ubicacion: str
+    fecha_creacion: str = field(default_factory=str)
 
 @dataclass(frozen=True)
 class MetricaDTO(DTO):

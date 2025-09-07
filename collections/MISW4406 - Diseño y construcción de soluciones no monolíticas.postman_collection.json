@@ -1,0 +1,540 @@
+{
+	"info": {
+		"_postman_id": "1f4430cd-e1ec-4ec6-9007-54cce3b0b902",
+		"name": "MISW4406 - Diseño y construcción de soluciones no monolíticas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10852636"
+	},
+	"item": [
+		{
+			"name": "Afiliaciones",
+			"item": [
+				{
+					"name": "Crear Campaña",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status should be 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"const campaignId = pm.response.json().id;\r",
+									"pm.collectionVariables.set('CAMPAIGN_ID', campaignId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025 2\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 50000.0,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"María González\",\r\n            \"email\": \"maria.gonzalez@email.com\",\r\n            \"telefono\": \"+57 300 123 4567\",\r\n            \"categoria\": \"Lifestyle\",\r\n            \"precio_por_post\": 1500.0,\r\n            \"ubicacion\": \"Bogotá, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\r\n                    \"numero_seguidores\": 150000,\r\n                    \"engagement_rate\": 4.5\r\n                },\r\n                {\r\n                    \"nombre\": \"TikTok\",\r\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\r\n                    \"numero_seguidores\": 80000,\r\n                    \"engagement_rate\": 6.2\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"Carlos Mendoza\",\r\n            \"email\": \"carlos.mendoza@email.com\",\r\n            \"telefono\": \"+57 301 987 6543\",\r\n            \"categoria\": \"Viajes\",\r\n            \"precio_por_post\": 2000.0,\r\n            \"ubicacion\": \"Medellín, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/carlosviajero\",\r\n                    \"numero_seguidores\": 200000,\r\n                    \"engagement_rate\": 5.1\r\n                },\r\n                {\r\n                    \"nombre\": \"YouTube\",\r\n                    \"enlace\": \"https://youtube.com/carlosviajero\",\r\n                    \"numero_seguidores\": 120000,\r\n                    \"engagement_rate\": 3.8\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/afiliaciones/campana",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"afiliaciones",
+								"campana"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear campaña Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025 2\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 50000.0,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"María González\",\r\n            \"email\": \"maria.gonzalez@email.com\",\r\n            \"telefono\": \"+57 300 123 4567\",\r\n            \"categoria\": \"Lifestyle\",\r\n            \"precio_por_post\": 1500.0,\r\n            \"ubicacion\": \"Bogotá, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\r\n                    \"numero_seguidores\": 150000,\r\n                    \"engagement_rate\": 4.5\r\n                },\r\n                {\r\n                    \"nombre\": \"TikTok\",\r\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\r\n                    \"numero_seguidores\": 80000,\r\n                    \"engagement_rate\": 6.2\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"Carlos Mendoza\",\r\n            \"email\": \"carlos.mendoza@email.com\",\r\n            \"telefono\": \"+57 301 987 6543\",\r\n            \"categoria\": \"Viajes\",\r\n            \"precio_por_post\": 2000.0,\r\n            \"ubicacion\": \"Medellín, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/carlosviajero\",\r\n                    \"numero_seguidores\": 200000,\r\n                    \"engagement_rate\": 5.1\r\n                },\r\n                {\r\n                    \"nombre\": \"YouTube\",\r\n                    \"enlace\": \"https://youtube.com/carlosviajero\",\r\n                    \"numero_seguidores\": 120000,\r\n                    \"engagement_rate\": 3.8\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/afiliaciones/campana",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"afiliaciones",
+										"campana"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/3.1.3 Python/3.12.11"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Sep 2025 18:25:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1959"
+								},
+								{
+									"key": "Vary",
+									"value": "Cookie"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "session=eyJ1b3ciOnsiIGIiOiJnQVNWVEFBQUFBQUFBQUNNR0dGc2NHVnpjR0Z5ZEc1bGNuTXVZMjl1Wm1sbkxuVnZkNVNNRjFWdWFXUmhaRlJ5WVdKaGFtOVRVVXhCYkdOb1pXMTVsSk9VS1lHVWZaU01DRjlpWVhSamFHVnpsRjJVYzJJdSJ9fQ.aL3OCQ._VwqebmtMAbrKAxxnj5kMcm9QFE; HttpOnly; Path=/"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\n    \"fecha_actualizacion\": \"2025-09-07 18:22:50.401230\",\n    \"fecha_creacion\": \"2025-09-07 18:22:50.401224\",\n    \"fecha_fin\": \"2025-10-15T23:59:59+00:00\",\n    \"fecha_inicio\": \"2025-09-15T00:00:00+00:00\",\n    \"hashtags\": [\n        \"#VeranoAlpes\",\n        \"#LifestyleBrand\",\n        \"#Verano2025\",\n        \"#AlpesPartners\"\n    ],\n    \"id\": \"e9d19d61-5c59-400f-a7b9-04fbfcde7c54\",\n    \"influencers\": [\n        {\n            \"categoria\": \"Lifestyle\",\n            \"email\": \"maria.gonzalez@email.com\",\n            \"fecha_creacion\": \"\",\n            \"nombre\": \"María González\",\n            \"precio_por_post\": 1500,\n            \"redes_sociales\": [\n                {\n                    \"engagement_rate\": 4.5,\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\n                    \"nombre\": \"Instagram\",\n                    \"numero_seguidores\": 150000\n                },\n                {\n                    \"engagement_rate\": 6.2,\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\n                    \"nombre\": \"TikTok\",\n                    \"numero_seguidores\": 80000\n                }\n            ],\n            \"telefono\": \"\",\n            \"ubicacion\": \"Bogotá, Colombia\"\n        },\n        {\n            \"categoria\": \"Viajes\",\n            \"email\": \"carlos.mendoza@email.com\",\n            \"fecha_creacion\": \"\",\n            \"nombre\": \"Carlos Mendoza\",\n            \"precio_por_post\": 2000,\n            \"redes_sociales\": [\n                {\n                    \"engagement_rate\": 5.1,\n                    \"enlace\": \"https://instagram.com/carlosviajero\",\n                    \"nombre\": \"Instagram\",\n                    \"numero_seguidores\": 200000\n                },\n                {\n                    \"engagement_rate\": 3.8,\n                    \"enlace\": \"https://youtube.com/carlosviajero\",\n                    \"nombre\": \"YouTube\",\n                    \"numero_seguidores\": 120000\n                }\n            ],\n            \"telefono\": \"\",\n            \"ubicacion\": \"Medellín, Colombia\"\n        }\n    ],\n    \"nombre\": \"Campaña Verano 2025 2\",\n    \"objetivo\": \"Engagement\",\n    \"presupuesto\": 50000\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear Campaña Sin Influencers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status should be 400\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 50000.0,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/afiliaciones/campana",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"afiliaciones",
+								"campana"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear Campaña Sin Influencers",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 50000.0,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/afiliaciones/campana",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"afiliaciones",
+										"campana"
+									]
+								}
+							},
+							"status": "BAD REQUEST",
+							"code": 400,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/3.1.3 Python/3.12.11"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Sep 2025 19:20:16 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "93"
+								},
+								{
+									"key": "Vary",
+									"value": "Cookie"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "session=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Path=/"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"MinimoUnInfluencer - Una campaña debe tener al menos un influencer asociado\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear Campaña Sin Presupuesto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status should be 400\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 0,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"María González\",\r\n            \"email\": \"maria.gonzalez@email.com\",\r\n            \"telefono\": \"+57 300 123 4567\",\r\n            \"categoria\": \"Lifestyle\",\r\n            \"precio_por_post\": 1500.0,\r\n            \"ubicacion\": \"Bogotá, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\r\n                    \"numero_seguidores\": 150000,\r\n                    \"engagement_rate\": 4.5\r\n                },\r\n                {\r\n                    \"nombre\": \"TikTok\",\r\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\r\n                    \"numero_seguidores\": 80000,\r\n                    \"engagement_rate\": 6.2\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/afiliaciones/campana",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"afiliaciones",
+								"campana"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear Campaña Sin Presupuesto",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 0,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"María González\",\r\n            \"email\": \"maria.gonzalez@email.com\",\r\n            \"telefono\": \"+57 300 123 4567\",\r\n            \"categoria\": \"Lifestyle\",\r\n            \"precio_por_post\": 1500.0,\r\n            \"ubicacion\": \"Bogotá, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\r\n                    \"numero_seguidores\": 150000,\r\n                    \"engagement_rate\": 4.5\r\n                },\r\n                {\r\n                    \"nombre\": \"TikTok\",\r\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\r\n                    \"numero_seguidores\": 80000,\r\n                    \"engagement_rate\": 6.2\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/afiliaciones/campana",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"afiliaciones",
+										"campana"
+									]
+								}
+							},
+							"status": "BAD REQUEST",
+							"code": 400,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/3.1.3 Python/3.12.11"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Sep 2025 19:20:05 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "88"
+								},
+								{
+									"key": "Vary",
+									"value": "Cookie"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "session=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; HttpOnly; Path=/"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"PresupuestoValido - El presupuesto de la campaña debe ser mayor a cero\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear Campaña Único Influencer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status should be 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"const campaignId = pm.response.json().id;\r",
+									"pm.collectionVariables.set('CAMPAIGN_ID', campaignId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 50000,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"María González\",\r\n            \"email\": \"maria.gonzalez@email.com\",\r\n            \"telefono\": \"+57 300 123 4567\",\r\n            \"categoria\": \"Lifestyle\",\r\n            \"precio_por_post\": 1500.0,\r\n            \"ubicacion\": \"Bogotá, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\r\n                    \"numero_seguidores\": 150000,\r\n                    \"engagement_rate\": 4.5\r\n                },\r\n                {\r\n                    \"nombre\": \"TikTok\",\r\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\r\n                    \"numero_seguidores\": 80000,\r\n                    \"engagement_rate\": 6.2\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/afiliaciones/campana",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"afiliaciones",
+								"campana"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear Campaña Único Influencer",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nombre\": \"Campaña Verano 2025\",\r\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\r\n    \"fecha_inicio\": \"2025-09-15T00:00:00Z\",\r\n    \"fecha_fin\": \"2025-10-15T23:59:59Z\",\r\n    \"presupuesto\": 50000,\r\n    \"objetivo\": \"Engagement\",\r\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\r\n    \"hashtags\": [\r\n        \"#VeranoAlpes\",\r\n        \"#LifestyleBrand\",\r\n        \"#Verano2025\",\r\n        \"#AlpesPartners\"\r\n    ],\r\n    \"influencers\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\",\r\n            \"nombre\": \"María González\",\r\n            \"email\": \"maria.gonzalez@email.com\",\r\n            \"telefono\": \"+57 300 123 4567\",\r\n            \"categoria\": \"Lifestyle\",\r\n            \"precio_por_post\": 1500.0,\r\n            \"ubicacion\": \"Bogotá, Colombia\",\r\n            \"fecha_creacion\": \"2025-09-07T10:00:00Z\",\r\n            \"redes_sociales\": [\r\n                {\r\n                    \"nombre\": \"Instagram\",\r\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\r\n                    \"numero_seguidores\": 150000,\r\n                    \"engagement_rate\": 4.5\r\n                },\r\n                {\r\n                    \"nombre\": \"TikTok\",\r\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\r\n                    \"numero_seguidores\": 80000,\r\n                    \"engagement_rate\": 6.2\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/afiliaciones/campana",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"afiliaciones",
+										"campana"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/3.1.3 Python/3.12.11"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Sep 2025 19:19:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1308"
+								},
+								{
+									"key": "Vary",
+									"value": "Cookie"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "session=eyJ1b3ciOnsiIGIiOiJnQVNWVEFBQUFBQUFBQUNNR0dGc2NHVnpjR0Z5ZEc1bGNuTXVZMjl1Wm1sbkxuVnZkNVNNRjFWdWFXUmhaRlJ5WVdKaGFtOVRVVXhCYkdOb1pXMTVsSk9VS1lHVWZaU01DRjlpWVhSamFHVnpsRjJVYzJJdSJ9fQ.aL3a2g.xBPsNLNChYsN4kxn46q20tRN500; HttpOnly; Path=/"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"audiencia_objetivo\": \"Millennials de 25-35 años interesados en lifestyle y viajes\",\n    \"descripcion\": \"Campaña de marketing para productos de verano dirigida a millennials\",\n    \"fecha_actualizacion\": \"2025-09-07 19:18:04.371683\",\n    \"fecha_creacion\": \"2025-09-07 19:18:04.371679\",\n    \"fecha_fin\": \"2025-10-15T23:59:59+00:00\",\n    \"fecha_inicio\": \"2025-09-15T00:00:00+00:00\",\n    \"hashtags\": [\n        \"#VeranoAlpes\",\n        \"#LifestyleBrand\",\n        \"#Verano2025\",\n        \"#AlpesPartners\"\n    ],\n    \"id\": \"4d5b9e0f-1949-4c86-b00d-00cdf7fd7088\",\n    \"influencers\": [\n        {\n            \"categoria\": \"Lifestyle\",\n            \"email\": \"maria.gonzalez@email.com\",\n            \"fecha_creacion\": \"\",\n            \"nombre\": \"María González\",\n            \"precio_por_post\": 1500,\n            \"redes_sociales\": [\n                {\n                    \"engagement_rate\": 4.5,\n                    \"enlace\": \"https://instagram.com/mariagonzalez\",\n                    \"nombre\": \"Instagram\",\n                    \"numero_seguidores\": 150000\n                },\n                {\n                    \"engagement_rate\": 6.2,\n                    \"enlace\": \"https://tiktok.com/@mariagonzalez\",\n                    \"nombre\": \"TikTok\",\n                    \"numero_seguidores\": 80000\n                }\n            ],\n            \"telefono\": \"\",\n            \"ubicacion\": \"Bogotá, Colombia\"\n        }\n    ],\n    \"nombre\": \"Campaña Verano 2025\",\n    \"objetivo\": \"Engagement\",\n    \"presupuesto\": 50000\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Campaña Por Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status should be 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/afiliaciones/campana/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"afiliaciones",
+								"campana",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{CAMPAIGN_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/health",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Spec",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/spec",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"spec"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": ""
+		},
+		{
+			"key": "CAMPAIGN_ID",
+			"value": ""
+		}
+	]
+}

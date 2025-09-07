@@ -21,23 +21,7 @@ class RepositorioInfluencersPostgresql(RepositorioInfluencers):
         raise NotImplementedError
 
     def obtener_todos(self) -> list[Influencer]:
-        # Ejemplo de influencer de muestra
-        red_social = RedSocial(
-            nombre=NombreRedSocial("Instagram"),
-            enlace=EnlaceRedSocial("https://instagram.com/influencer1"),
-            numero_seguidores=NumeroSeguidores(50000),
-            engagement_rate=EngagementRate(3.5)
-        )
-
-        influencer = Influencer(
-            nombre=NombreInfluencer("Ana García"),
-            email=EmailInfluencer("ana@email.com"),
-            categoria=CategoriaInfluencer.MODA,
-            precio_por_post=PrecioPorPost(500.0),
-            ubicacion=UbicacionInfluencer("Madrid, España"),
-            redes_sociales=[red_social]
-        )
-        return [influencer]
+        raise NotImplementedError
 
     def agregar(self, entity: Influencer):
         raise NotImplementedError
@@ -59,7 +43,10 @@ class RepositorioCampanasPostgresql(RepositorioCampanas):
         return self._fabrica_afiliaciones
 
     def obtener_por_id(self, id: UUID) -> Campana:
-        campana_dto = db.session.query(CampanaDTO).filter_by(id=str(id)).one()
+        from sqlalchemy.orm import joinedload
+        campana_dto = db.session.query(CampanaDTO).options(
+            joinedload(CampanaDTO.influencers)
+        ).filter_by(id=str(id)).one()
         return self.fabrica_afiliaciones.crear_objeto(campana_dto, MapeadorCampana())
 
     def obtener_todos(self) -> list[Campana]:

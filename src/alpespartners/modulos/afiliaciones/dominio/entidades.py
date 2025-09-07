@@ -66,7 +66,7 @@ class Campana(AgregacionRaiz):
     audiencia_objetivo: ov.AudienciaObjetivo = field(default_factory=ov.AudienciaObjetivo)
     estado: ov.EstadoCampana = field(default=ov.EstadoCampana.PENDIENTE)
     hashtags: list[ov.Hashtag] = field(default_factory=list[ov.Hashtag])
-    influencers: list[ov.Influencer] = field(default_factory=list[ov.Influencer])
+    influencers: list[Influencer] = field(default_factory=list)
     contenidos: list[ov.Contenido] = field(default_factory=list[ov.Contenido])
 
     def crear_campana(self, campana: Campana):
