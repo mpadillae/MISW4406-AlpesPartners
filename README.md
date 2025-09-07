@@ -1,167 +1,140 @@
-# Tutorial 5 - CQRS y manejo de eventos
+# MISW4406 - AlpesPartners
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&repo=MISW4406/tutorial-5-cqrs-eventos)
+Repositorio del proyecto del curso de **diseño y construcción de aplicaciones no monolíticas**. Este proyecto implementa un sistema distribuido usando patrones CQRS, eventos de dominio para la comunicación asíncrona entre componentes.
 
-Repositorio con código base para el uso de un sistema usando el patrón CQRS y usando eventos de dominio e integración para la comunicación asíncrona entre componentes internos parte del mismo contexto acotado y sistemas externos.
+## 👥 Integrantes del equipo
 
-Este repositorio está basado en el repositorio de sidecars visto en el tutorial 4 del curso. Por tal motivo, puede usar ese mismo repositorio para entender algunos detalles que este README no cubre.
+| Nombre | Correo |
+|--------|------------------|
+| Miguel Fernando Padilla Espino | m.padillae@uniandes.edu.co |
+| Johann Sebastian Páez Campos | js.paezc1@uniandes.edu.co |
+| Julián Oliveros Forero | je.oliverosf@uniandes.edu.co |
 
-## Arquitectura
+## 📋 Tabla de contenidos
+- [🏗️ Arquitectura](#%EF%B8%8F-arquitectura)
+- [📁 Estructura del proyecto](#-estructura-del-proyecto)
+- [🐳 Docker Compose](#-docker-compose)
 
-<img width="3228" height="387" alt="5" src="https://github.com/user-attachments/assets/673a55e4-4d0b-47f7-baad-42a85d89b64d" />
+## 🏗️ Arquitectura
+La arquitectura del sistema está compuesta por dos servicios (alpespartners y notificaciones). AlpesPartners tiene dos módulos que se comunican de forma asíncrona a través de un broker de mensajes (Apache Pulsar):
 
-## Estructura del proyecto
+![](https://github.com/user-attachments/assets/8b14d2d1-b6d5-4360-b03d-99495a318c7b)
 
-Este repositorio sigue en general la misma estructura del repositorio de origen. Sin embargo, hay un par de adiciones importante mencionar:
+El proyecto implementa una arquitectura de microservicios que utiliza:
+- **Patrón CQRS**: Separación de operaciones de lectura y escritura
+- **Eventos de dominio**: Para comunicación interna entre módulos del mismo contexto acotado
+- **Message broker**: Apache Pulsar para el manejo de eventos
+- **Docker**: Para la contenerización y orquestación de servicios
 
-- El directorio **src** ahora cuenta con un nuevo directorio llamado **notificaciones**, el cual representa un servicio de mensajería que recibe eventos de integración propagados del sistema de AlpesPartners, por medio de un broker de eventos.
-- El directorio **src** ahora también cuenta cuenta con un nuevo directorio llamado **ui**, el cual representa nuestra interfaz gráfica la cual puede recibir por medio de un BFF desarrollado en Python usando websockets, las respuestas de nuestros comandos de forma asíncrona.
-- Nuestro proyecto de AlpesPartners ha cambiado de forma considerable. Los siguientes son los cambios relevantes en cada módulo:
-  - **api**: En este módulo se modificó el API de `vuelos.py` el cual cuenta con dos nuevos endpoints: `/reserva-commando` y `/reserva-query`, los cuales por detrás de escenas usan un patrón CQRS como la base de su comunicación.
-  - **modulos/../aplicacion**: Este módulo ahora considera los sub-módulos: `queries` y `comandos`. En dichos directorios pdrá ver como se desacopló las diferentes operaciones lectura y escritura. Vea en el módulo `vuelos` los archivos `obtener_reserva.py` y `crear_reserva.py` para ver como se logra dicho desacoplamiento.
-  - **modulos/../aplicacion/handlers.py**: Estos son los handlers de aplicación que se encargan de oir y reaccionar a eventos. Si consulta el módulo de clientes podra ver que tenemos handlers para oir y reaccionar a los eventos de dominio para poder continuar con una transacción. En el modulo de vuelos encontramos handlers para eventos de integración los cuales pueden ser disparados desde la capa de infraestructura, la cual está consumiendo eventos y comandos del broker de eventos.
-  - **modulos/../dominio/eventos.py**: Este archivo contiene todos los eventos de dominio que son disparados cuando una actividad de dominio es ejecutada de forma correcta.
-  - **modulos/../infraestructura/consumidores.py**: Este archivo cuenta con toda la lógica en términos de infrastructura para consumir los eventos y comandos que provienen del broker de eventos. Desarrollado de una forma funcional.
-  - **modulos/../infraestructura/despachadores.py**: Este archivo cuenta con toda la lógica en terminos de infrastructura para publicar los eventos y comandos de integración en el broker de eventos. Desarrollado de manera OOP.
-  - **modulos/../infraestructura/schema**: En este directorio encontramos la definición de los eventos y comandos de integración. Puede ver que se usa un formato popular en la comunidad de desarrollo de software open source, en donde los directorios/módulos nos dan un indicio de las versiones `/schema/v1/...`. De esta manera podemos estar tranquilos con versiones incrementales y menores, pero listos cuando tengamos que hacer un cambio grande.
-  - **seedwork/aplicacion/comandos.py**: Definición general de los comandos, handlers e interface del despachador.
-  - **seedwork/infraestructura/queries.py**: Definición general de los queries, handlers e interface del despachador.
-  - **seedwork/infraestructura/uow.py**: La Unidad de Trabajo (UoW) mantiene una lista de objetos afectados por una transacción de negocio y coordina los cambios de escritura. Este objeto nos va ser de gran importancia, pues cuando comenzamos a usar eventos de dominio e interactuar con otros módulos, debemos ser capaces de garantizar consistencia entre los diferentes objetos y partes de nuestro sistema.
+## 📁 Estructura del proyecto
 
-## AlpesPartners
-
-### Ejecutar pruebas
-
-```bash
-coverage run -m pytest
+```
+📦 MISW4406-AlpesPartners
+├─ docker-compose.yml
+├─ pyproject.toml
+├─ README.md
+└─ src/
+   ├─ alpespartners/           # Servicio principal de AlpesPartners
+   │  ├─ api/                  # APIs REST
+   │  ├─ config/               # Configuración de base de datos y UoW
+   │  ├─ modulos/              # Módulos de dominio
+   │  │  ├─ afiliaciones/      # Gestión de afiliaciones
+   │  │  └─ marca/             # Gestión de marcas
+   │  └─ seedwork/             # Componentes base compartidos
+   └─ notificaciones/          # Servicio de mensajería y notificaciones
+      ├─ main.py
+      └─ requirements.txt
 ```
 
-### Ver reporte de covertura
+### Flujo de dependencias
 
-```bash
-coverage report
-```
+1. **Aplicación** depende de **Dominio** (reglas de negocio)
+2. **Infraestructura** implementa interfaces del **Dominio**
+3. **Aplicación** puede interactuar directamente con **Infraestructura** para operaciones específicas
+4. **Seedwork** proporciona componentes base reutilizables para todos los módulos
 
-## Docker-compose
 
-Para desplegar toda la arquitectura en un solo comando, usamos `docker-compose`.
+### Componentes principales
 
-### Prerequisitos
+| Componente | Descripción |
+|------------|-------------|
+| **alpespartners/api** | APIs REST con endpoints para CQRS (`/afiliaciones/campana` y `/afiliaciones/campana/<id>`) |
+| **alpespartners/modulos** | Módulos de dominio con separación de comandos, queries y handlers |
+| **notificaciones** | Servicio que consume eventos de integración del broker |
+| **seedwork** | Componentes base: entidades, eventos, comandos, queries, UoW |
+| **notificaciones** | Servicio de mensajería que recibe eventos de integración |
+
+## 🐳 Docker Compose
+
+Para desplegar toda la arquitectura en un solo comando, utilizamos `docker-compose`.
+
+### Prerrequisitos
+
+Para ejecutar este proyecto necesitará:
+- [Docker](https://docs.docker.com/get-docker/) y [docker compose](https://docs.docker.com/compose/install/)
+
+### Configuración inicial
 
 Antes de ejecutar por primera vez, siga estos pasos:
 
 1. **Crear directorio de datos de Pulsar:**
-
-```bash
-mkdir -p data/pulsar && chmod -R 777 data/pulsar
-```
+   ```bash
+   rm -r -f data/pulsar
+   mkdir -p data/pulsar && chmod -R 777 data/pulsar
+   ```
 
 2. **Verificar puertos libres:**
+   ```bash
+   # Verificar que el puerto 5001 esté libre (cambiar en docker-compose.yml si está ocupado)
+   lsof -i :5001
 
-```bash
-# Verificar que el puerto 5001 esté libre (si está ocupado, cambiar por otro puerto en docker-compose.yml)
-lsof -i :5001
+   # Verificar que los puertos de Pulsar estén libres
+   lsof -i :6650  # Pulsar broker
+   lsof -i :8080  # Pulsar admin
+   ```
 
-# Verificar que los puertos de Pulsar estén libres
-lsof -i :6650
-lsof -i :8080
-```
+### Ejecutar servicios
 
-### Ejecutar todos los servicios
-
-Desde el directorio principal, ejecute el siguiente comando para desplegar Pulsar + AlpesPartners API + Servicio de Notificaciones:
-
+**Iniciar todos los servicios:**
 ```bash
 docker-compose up
 ```
 
 Esto iniciará:
-
 - **Pulsar**: Message broker (puertos 6650 y 8080)
-- **AlpesPartners API**: API REST en http://localhost:5001
-- **Notificaciones**: Servicio que consume eventos de reservas
+- **AlpesPartners API**: API REST (puerto 5001)
+- **Notificaciones**: Servicio que consume eventos de afiliaciones.
 
-### Otros comandos útiles
-
-Si desea detener el ambiente ejecute:
+**Otros comandos útiles:**
 
 ```bash
+# Detener el ambiente
 docker-compose down
-```
 
-En caso de querer desplegar en background:
-
-```bash
+# Ejecutar en background
 docker-compose up -d
-```
 
-Para ver logs en tiempo real:
-
-```bash
-# Todos los servicios
+# Ver logs en tiempo real
 docker-compose logs -f
 
-# Solo un servicio específico
+# Logs de un servicio específico
 docker-compose logs -f alpespartners
 docker-compose logs -f notificaciones
 docker-compose logs -f pulsar
-```
 
-Para reconstruir las imágenes:
-
-```bash
+# Reconstruir imágenes
 docker-compose up --build
 ```
 
 ### Probar la aplicación
+Puede probar la aplicación utilizando las colecciones de Postman que se encuentran ubicadas en la carpeta `collections` en la raíz del proyecto.
 
-Una vez que todos los servicios estén ejecutándose, puede probar el flujo completo de eventos:
-
+### Verificar logs del servicio de notificaciones
 ```bash
-# 1. Crear una reserva (esto debería disparar un evento)
-curl -X POST http://localhost:5001/vuelos/reserva \
-  -H "Content-Type: application/json" \
-  -d '{
-    "fecha_creacion": "2025-09-03T12:00:00Z",
-    "fecha_actualizacion": "2025-09-03T12:00:00Z",
-    "id": "test-reserva-123",
-    "itinerarios": [
-        {
-            "odos": [
-                {
-                    "segmentos": [
-                        {
-                            "legs": [
-                                {
-                                    "fecha_salida": "2022-11-22T13:10:00Z",
-                                    "fecha_llegada": "2022-11-22T15:10:00Z",
-                                    "destino": {
-                                        "codigo": "sasads",
-                                        "nombre": "John F. Kennedy International Airport"
-                                    },
-                                    "origen": {
-                                        "codigo": "gggg",
-                                        "nombre": "El Dorado - Bogotá International Airport (BOG)"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-  }'
-
-# 2. Verificar logs del servicio de notificaciones para ver el evento procesado
 docker-compose logs notificaciones
 ```
 
-Si todo funciona correctamente, deberías ver en los logs de notificaciones algo como:
+## 📄 Licencia
 
-```
-=========================================
-Mensaje Recibido: 'id_reserva=test-reserva-123, id_cliente=...'
-=========================================
-==== Envía correo a usuario ====
-```
+Copyright © 2025 - MISW4406: Diseño y construcción de aplicaciones no monolíticas.  
+Universidad de los Andes - Maestría en Ingeniería de Software
