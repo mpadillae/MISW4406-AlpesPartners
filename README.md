@@ -8,25 +8,101 @@ Este repositorio está basado en el repositorio de sidecars visto en el tutorial
 
 ## Arquitectura
 
-<img width="3228" height="387" alt="5" src="https://github.com/user-attachments/assets/673a55e4-4d0b-47f7-baad-42a85d89b64d" />
+La arquitectura del sistema está compuesta por dos servicios principales que se comunican de forma asíncrona a través de un broker de mensajes (Pulsar):
+
+<img width="3228" height="387" alt="Arquitectura del Sistema" src="https://github.com/user-attachments/assets/673a55e4-4d0b-47f7-baad-42a85d89b64d" />
+
+### Componentes de la Arquitectura
+
+**AlpesPartners (Servicio Principal):**
+
+- Implementa una arquitectura hexagonal con tres capas principales
+- Contiene dos módulos de negocio: **Afiliaciones** y **Marca**
+- Cada módulo sigue el patrón de dependencias: Aplicación → Dominio ← Infraestructura
+- Incluye componentes de soporte: **API**, **Config** y **Seedwork**
+
+**Notificaciones (Servicio de Mensajería):**
+
+- Servicio independiente que consume eventos de integración
+- Se comunica con AlpesPartners a través del broker de mensajes
+- Procesa eventos de campañas creadas y envía notificaciones
+
+### Flujo de Dependencias
+
+1. **Aplicación** depende de **Dominio** (reglas de negocio)
+2. **Infraestructura** implementa interfaces del **Dominio**
+3. **Aplicación** puede interactuar directamente con **Infraestructura** para operaciones específicas
+4. **Seedwork** proporciona componentes base reutilizables para todos los módulos
 
 ## Estructura del proyecto
 
-Este repositorio sigue en general la misma estructura del repositorio de origen. Sin embargo, hay un par de adiciones importante mencionar:
+Este repositorio implementa una arquitectura de microservicios con patrones CQRS y manejo de eventos, organizada en dos servicios principales:
 
-- El directorio **src** ahora cuenta con un nuevo directorio llamado **notificaciones**, el cual representa un servicio de mensajería que recibe eventos de integración propagados del sistema de AlpesPartners, por medio de un broker de eventos.
-- El directorio **src** ahora también cuenta cuenta con un nuevo directorio llamado **ui**, el cual representa nuestra interfaz gráfica la cual puede recibir por medio de un BFF desarrollado en Python usando websockets, las respuestas de nuestros comandos de forma asíncrona.
-- Nuestro proyecto de AlpesPartners ha cambiado de forma considerable. Los siguientes son los cambios relevantes en cada módulo:
-  - **api**: En este módulo se modificó el API de `vuelos.py` el cual cuenta con dos nuevos endpoints: `/reserva-commando` y `/reserva-query`, los cuales por detrás de escenas usan un patrón CQRS como la base de su comunicación.
-  - **modulos/../aplicacion**: Este módulo ahora considera los sub-módulos: `queries` y `comandos`. En dichos directorios pdrá ver como se desacopló las diferentes operaciones lectura y escritura. Vea en el módulo `vuelos` los archivos `obtener_reserva.py` y `crear_reserva.py` para ver como se logra dicho desacoplamiento.
-  - **modulos/../aplicacion/handlers.py**: Estos son los handlers de aplicación que se encargan de oir y reaccionar a eventos. Si consulta el módulo de clientes podra ver que tenemos handlers para oir y reaccionar a los eventos de dominio para poder continuar con una transacción. En el modulo de vuelos encontramos handlers para eventos de integración los cuales pueden ser disparados desde la capa de infraestructura, la cual está consumiendo eventos y comandos del broker de eventos.
-  - **modulos/../dominio/eventos.py**: Este archivo contiene todos los eventos de dominio que son disparados cuando una actividad de dominio es ejecutada de forma correcta.
-  - **modulos/../infraestructura/consumidores.py**: Este archivo cuenta con toda la lógica en términos de infrastructura para consumir los eventos y comandos que provienen del broker de eventos. Desarrollado de una forma funcional.
-  - **modulos/../infraestructura/despachadores.py**: Este archivo cuenta con toda la lógica en terminos de infrastructura para publicar los eventos y comandos de integración en el broker de eventos. Desarrollado de manera OOP.
-  - **modulos/../infraestructura/schema**: En este directorio encontramos la definición de los eventos y comandos de integración. Puede ver que se usa un formato popular en la comunidad de desarrollo de software open source, en donde los directorios/módulos nos dan un indicio de las versiones `/schema/v1/...`. De esta manera podemos estar tranquilos con versiones incrementales y menores, pero listos cuando tengamos que hacer un cambio grande.
-  - **seedwork/aplicacion/comandos.py**: Definición general de los comandos, handlers e interface del despachador.
-  - **seedwork/infraestructura/queries.py**: Definición general de los queries, handlers e interface del despachador.
-  - **seedwork/infraestructura/uow.py**: La Unidad de Trabajo (UoW) mantiene una lista de objetos afectados por una transacción de negocio y coordina los cambios de escritura. Este objeto nos va ser de gran importancia, pues cuando comenzamos a usar eventos de dominio e interactuar con otros módulos, debemos ser capaces de garantizar consistencia entre los diferentes objetos y partes de nuestro sistema.
+### Servicios Principales
+
+#### 1. **AlpesPartners** (Servicio Principal)
+
+Sistema principal que maneja la lógica de negocio de afiliaciones y marca, implementando una arquitectura hexagonal con separación clara de capas:
+
+**Estructura de Módulos:**
+
+- **afiliaciones/**: Módulo de gestión de afiliaciones e influencers
+  - `aplicacion/`: Capa de aplicación con comandos, queries y handlers
+  - `dominio/`: Capa de dominio con entidades, eventos y reglas de negocio
+  - `infraestructura/`: Capa de infraestructura con repositorios, DTOs y consumidores
+- **marca/**: Módulo de gestión de marca y usuarios
+  - `aplicacion/`: Capa de aplicación con comandos, queries y handlers
+  - `dominio/`: Capa de dominio con entidades y objetos de valor
+  - `infraestructura/`: Capa de infraestructura con DTOs y consumidores
+
+**Componentes de Soporte:**
+
+- **api/**: API REST con endpoints para afiliaciones y marca
+- **config/**: Configuración de base de datos y unidad de trabajo
+- **seedwork/**: Componentes base reutilizables
+  - `aplicacion/`: Comandos, queries y handlers base
+  - `dominio/`: Entidades, eventos y servicios base
+  - `infraestructura/`: UoW, esquemas y utilidades
+  - `presentacion/`: API base
+
+#### 2. **Notificaciones** (Servicio de Mensajería)
+
+Servicio independiente que consume eventos de integración del broker de mensajes:
+
+- `main.py`: Punto de entrada que consume eventos de campañas creadas
+
+### Arquitectura por Capas
+
+Cada módulo de negocio (afiliaciones, marca) sigue una arquitectura hexagonal:
+
+1. **Capa de Aplicación** (`aplicacion/`):
+
+   - `comandos/`: Comandos CQRS para operaciones de escritura
+   - `queries/`: Queries CQRS para operaciones de lectura
+   - `handlers.py`: Manejadores de comandos, queries y eventos
+   - `servicios.py`: Servicios de aplicación
+
+2. **Capa de Dominio** (`dominio/`):
+
+   - `entidades.py`: Entidades de negocio
+   - `eventos.py`: Eventos de dominio
+   - `objetos_valor.py`: Objetos de valor
+   - `servicios.py`: Servicios de dominio
+   - `reglas.py`: Reglas de negocio
+
+3. **Capa de Infraestructura** (`infraestructura/`):
+   - `repositorios.py`: Implementación de repositorios
+   - `consumidores.py`: Consumidores de eventos del broker
+   - `despachadores.py`: Despachadores de eventos
+   - `dto.py`: Objetos de transferencia de datos
+   - `schema/`: Esquemas de eventos de integración (v1/)
+
+### Patrones Implementados
+
+- **CQRS**: Separación de comandos (escritura) y queries (lectura)
+- **Event Sourcing**: Eventos de dominio para cambios de estado
+- **Hexagonal Architecture**: Separación clara entre dominio, aplicación e infraestructura
+- **Event-Driven Architecture**: Comunicación asíncrona entre servicios via broker de mensajes
 
 ## AlpesPartners
 
