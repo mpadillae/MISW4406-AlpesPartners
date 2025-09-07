@@ -104,6 +104,7 @@ Esto iniciará:
 - **Pulsar**: Message broker (puertos 6650 y 8080)
 - **AlpesPartners API**: API REST (puerto 5001)
 - **Notificaciones**: Servicio que consume eventos de afiliaciones.
+- **Postgres**: Instancia de PostgreSQL.
 
 **Otros comandos útiles:**
 
