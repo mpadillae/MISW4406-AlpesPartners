@@ -79,3 +79,35 @@ test-postman: ## Ejecutar pruebas con datos generados
 
 clean-test-data: ## Limpiar archivos de datos de prueba
 	rm -f test_campaigns.json test_events.json test_curl_script.sh
+
+# Comandos de verificación
+check-ports: ## Verificar puertos en uso
+	@echo "🔍 Verificando puertos en uso..."
+	@echo "Servicios web:"
+	@lsof -i :8001 -i :8002 -i :8003 -i :8004 2>/dev/null || echo "  No hay conflictos en puertos de servicios"
+	@echo "Bases de datos:"
+	@lsof -i :5433 -i :5434 -i :5435 -i :5436 2>/dev/null || echo "  No hay conflictos en puertos de bases de datos"
+	@echo "Pulsar:"
+	@lsof -i :6650 -i :8080 2>/dev/null || echo "  No hay conflictos en puertos de Pulsar"
+
+check-services: ## Verificar que todos los servicios estén funcionando
+	@echo "🏥 Verificando servicios..."
+	@curl -s http://localhost:8001/health > /dev/null && echo "✅ Afiliaciones" || echo "❌ Afiliaciones"
+	@curl -s http://localhost:8002/health > /dev/null && echo "✅ Marca" || echo "❌ Marca"
+	@curl -s http://localhost:8003/health > /dev/null && echo "✅ Influencer" || echo "❌ Influencer"
+	@curl -s http://localhost:8004/health > /dev/null && echo "✅ Tracking" || echo "❌ Tracking"
+	@curl -s http://localhost:8080/admin/v2/clusters > /dev/null && echo "✅ Pulsar" || echo "❌ Pulsar"
+
+show-ports: ## Mostrar configuración de puertos
+	@echo "🚪 Configuración de puertos:"
+	@echo "Servicios web:"
+	@echo "  • Afiliaciones: http://localhost:8001"
+	@echo "  • Marca: http://localhost:8002"
+	@echo "  • Influencer: http://localhost:8003"
+	@echo "  • Tracking: http://localhost:8004"
+	@echo "  • Pulsar Admin: http://localhost:8080"
+	@echo "Bases de datos:"
+	@echo "  • Afiliaciones: localhost:5436"
+	@echo "  • Marca: localhost:5433"
+	@echo "  • Influencer: localhost:5434"
+	@echo "  • Tracking: localhost:5435"

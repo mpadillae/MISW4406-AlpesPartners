@@ -8,7 +8,7 @@ class CrearCampanaRequest(BaseModel):
     id_marca: uuid.UUID
     nombre: str = Field(..., min_length=1, max_length=100)
     descripcion: str = Field(..., min_length=1, max_length=500)
-    tipo: str = Field(..., regex="^(influencer|afiliado|mixta)$")
+    tipo: str = Field(...)
     presupuesto: float = Field(..., gt=0)
 
 

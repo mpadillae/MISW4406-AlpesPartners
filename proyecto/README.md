@@ -10,23 +10,23 @@ El sistema está compuesto por 4 microservicios independientes:
 - **Función**: Inicia el flujo de campañas
 - **Endpoint**: `POST /afiliaciones/campana`
 - **Eventos que publica**: `CampanaCreada`, `CampanaIniciada`
-- **Base de datos**: `afiliaciones-db` (PostgreSQL)
+- **Base de datos**: `afiliaciones-db` (PostgreSQL - Puerto 5436)
 
 ### 2. MARCA (Puerto 8002)
 - **Función**: Procesa información de marca
 - **Eventos que consume**: `CampanaCreada`, `CampanaIniciada`
-- **Base de datos**: `marca-db` (PostgreSQL)
+- **Base de datos**: `marca-db` (PostgreSQL - Puerto 5433)
 
 ### 3. INFLUENCER (Puerto 8003)
 - **Función**: Gestiona influencers
 - **Eventos que consume**: `CampanaCreada`, `CampanaIniciada`
-- **Base de datos**: `influencer-db` (PostgreSQL)
+- **Base de datos**: `influencer-db` (PostgreSQL - Puerto 5434)
 
 ### 4. TRACKING (Puerto 8004)
 - **Función**: Rastrea métricas y eventos
 - **Endpoint**: `POST /tracking/evento`
 - **Eventos que consume**: `CampanaCreada`, `CampanaIniciada`
-- **Base de datos**: `tracking-db` (PostgreSQL)
+- **Base de datos**: `tracking-db` (PostgreSQL - Puerto 5435)
 
 ## Tecnologías
 
@@ -162,6 +162,11 @@ curl -X POST "http://localhost:8004/tracking/evento" \
 ## Monitoreo
 
 - **Pulsar Admin**: http://localhost:8080
+- **Bases de Datos**:
+  - Afiliaciones: localhost:5436
+  - Marca: localhost:5433
+  - Influencer: localhost:5434
+  - Tracking: localhost:5435
 - **Logs**: `docker-compose logs -f [servicio]`
 - **Métricas**: Endpoints de tracking disponibles
 
