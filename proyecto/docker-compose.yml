@@ -1,0 +1,181 @@
+version: '3.8'
+
+services:
+  # Apache Pulsar
+  pulsar:
+    image: apachepulsar/pulsar:3.1.0
+    container_name: pulsar
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    command: >
+      bash -c "
+        bin/pulsar standalone --no-functions-worker --no-stream-storage
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/admin/v2/clusters"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Base de datos para Afiliaciones
+  afiliaciones-db:
+    image: postgres:15
+    container_name: afiliaciones-db
+    environment:
+      POSTGRES_DB: afiliaciones
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - afiliaciones_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Base de datos para Marca
+  marca-db:
+    image: postgres:15
+    container_name: marca-db
+    environment:
+      POSTGRES_DB: marca
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - marca_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Base de datos para Influencer
+  influencer-db:
+    image: postgres:15
+    container_name: influencer-db
+    environment:
+      POSTGRES_DB: influencer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - influencer_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Base de datos para Tracking
+  tracking-db:
+    image: postgres:15
+    container_name: tracking-db
+    environment:
+      POSTGRES_DB: tracking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - tracking_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Microservicio Afiliaciones
+  afiliaciones-service:
+    build: ./afiliaciones
+    container_name: afiliaciones-service
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@afiliaciones-db:5432/afiliaciones
+      - PULSAR_URL=pulsar://pulsar:6650
+    depends_on:
+      afiliaciones-db:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Microservicio Marca
+  marca-service:
+    build: ./marca
+    container_name: marca-service
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@marca-db:5432/marca
+      - PULSAR_URL=pulsar://pulsar:6650
+    depends_on:
+      marca-db:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Microservicio Influencer
+  influencer-service:
+    build: ./influencer
+    container_name: influencer-service
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@influencer-db:5432/influencer
+      - PULSAR_URL=pulsar://pulsar:6650
+    depends_on:
+      influencer-db:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Microservicio Tracking
+  tracking-service:
+    build: ./tracking
+    container_name: tracking-service
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@tracking-db:5432/tracking
+      - PULSAR_URL=pulsar://pulsar:6650
+    depends_on:
+      tracking-db:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  afiliaciones_data:
+  marca_data:
+  influencer_data:
+  tracking_data:
+
+networks:
+  default:
+    name: microservices-network

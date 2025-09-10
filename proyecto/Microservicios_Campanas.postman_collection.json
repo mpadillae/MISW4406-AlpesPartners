@@ -1,0 +1,631 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789012",
+		"name": "Microservicios de Campañas",
+		"description": "Colección completa para probar los 4 microservicios de campañas con arquitectura hexagonal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🏥 Health Checks",
+			"item": [
+				{
+					"name": "Afiliaciones - Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/health",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Marca - Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_marca}}/health",
+							"host": ["{{base_url_marca}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Influencer - Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_influencer}}/health",
+							"host": ["{{base_url_influencer}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tracking - Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tracking}}/health",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📋 Afiliaciones Service",
+			"item": [
+				{
+					"name": "Crear Campaña",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_marca\": \"{{marca_id}}\",\n  \"nombre\": \"Campaña de Verano 2024\",\n  \"descripcion\": \"Promoción de productos de verano con influencers\",\n  \"tipo\": \"influencer\",\n  \"presupuesto\": 15000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Campaña - Afiliados",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_marca\": \"{{marca_id}}\",\n  \"nombre\": \"Campaña de Afiliados Q1\",\n  \"descripcion\": \"Programa de afiliados para el primer trimestre\",\n  \"tipo\": \"afiliado\",\n  \"presupuesto\": 25000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Campaña - Mixta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_marca\": \"{{marca_id}}\",\n  \"nombre\": \"Campaña Mixta Black Friday\",\n  \"descripcion\": \"Campaña combinada de influencers y afiliados para Black Friday\",\n  \"tipo\": \"mixta\",\n  \"presupuesto\": 50000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Iniciar Campaña",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana/{{campana_id}}/iniciar",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana", "{{campana_id}}", "iniciar"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Campaña por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana/{{campana_id}}",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana", "{{campana_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Todas las Campañas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campanas",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campanas"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🏷️ Marca Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_marca}}/health",
+							"host": ["{{base_url_marca}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "El servicio de Marca solo consume eventos, no tiene endpoints REST públicos"
+		},
+		{
+			"name": "👥 Influencer Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_influencer}}/health",
+							"host": ["{{base_url_influencer}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "El servicio de Influencer solo consume eventos, no tiene endpoints REST públicos"
+		},
+		{
+			"name": "📊 Tracking Service",
+			"item": [
+				{
+					"name": "Registrar Evento - Vista",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"vista\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}},\n    \"fuente\": \"instagram\",\n    \"dispositivo\": \"mobile\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Evento - Clic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"clic\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}},\n    \"elemento\": \"boton_cta\",\n    \"posicion\": \"header\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Evento - Conversión",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"conversion\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}},\n    \"valor_compra\": 150.50,\n    \"producto\": \"producto_verano_001\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Evento - Engagement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"engagement\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}},\n    \"valor\": 0.85,\n    \"tipo\": \"like\",\n    \"plataforma\": \"instagram\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Evento - Compartir",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"compartir\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}},\n    \"plataforma\": \"instagram\",\n    \"tipo_contenido\": \"story\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Evento - Comentario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"comentario\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}},\n    \"texto\": \"¡Me encanta este producto!\",\n    \"sentimiento\": \"positivo\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Métricas de Campaña",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/metricas/{{campana_id}}",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "metricas", "{{campana_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Eventos de Campaña",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/eventos/{{campana_id}}",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "eventos", "{{campana_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Métricas por Marca",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/metricas/marca/{{marca_id}}",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "metricas", "marca", "{{marca_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔄 Flujo Completo de Prueba",
+			"item": [
+				{
+					"name": "1. Crear Campaña",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_marca\": \"{{marca_id}}\",\n  \"nombre\": \"Campaña de Prueba Completa\",\n  \"descripcion\": \"Campaña para probar el flujo completo del sistema\",\n  \"tipo\": \"influencer\",\n  \"presupuesto\": 20000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Iniciar Campaña",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana/{{campana_id}}/iniciar",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana", "{{campana_id}}", "iniciar"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Registrar Múltiples Eventos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"{{campana_id}}\",\n  \"tipo_evento\": \"vista\",\n  \"datos\": {\n    \"usuario\": \"user_test_001\",\n    \"timestamp\": {{$timestamp}},\n    \"fuente\": \"instagram\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Verificar Métricas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/metricas/{{campana_id}}",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "metricas", "{{campana_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Verificar Eventos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/eventos/{{campana_id}}",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "eventos", "{{campana_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧪 Casos de Prueba - Errores",
+			"item": [
+				{
+					"name": "Crear Campaña - Presupuesto Inválido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_marca\": \"{{marca_id}}\",\n  \"nombre\": \"Campaña con Error\",\n  \"descripcion\": \"Campaña con presupuesto inválido\",\n  \"tipo\": \"influencer\",\n  \"presupuesto\": -1000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Campaña - Tipo Inválido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_marca\": \"{{marca_id}}\",\n  \"nombre\": \"Campaña con Error\",\n  \"descripcion\": \"Campaña con tipo inválido\",\n  \"tipo\": \"tipo_invalido\",\n  \"presupuesto\": 1000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Campaña Inexistente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_afiliaciones}}/afiliaciones/campana/00000000-0000-0000-0000-000000000000",
+							"host": ["{{base_url_afiliaciones}}"],
+							"path": ["afiliaciones", "campana", "00000000-0000-0000-0000-000000000000"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Evento - Campaña Inexistente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_campana\": \"00000000-0000-0000-0000-000000000000\",\n  \"tipo_evento\": \"vista\",\n  \"datos\": {\n    \"usuario\": \"user123\",\n    \"timestamp\": {{$timestamp}}\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url_tracking}}/tracking/evento",
+							"host": ["{{base_url_tracking}}"],
+							"path": ["tracking", "evento"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Generar IDs únicos si no existen",
+					"if (!pm.collectionVariables.get('marca_id')) {",
+					"    pm.collectionVariables.set('marca_id', pm.variables.replaceIn('{{$randomUUID}}'));",
+					"}",
+					"",
+					"// Generar timestamp actual",
+					"pm.collectionVariables.set('current_timestamp', Math.floor(Date.now() / 1000));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Extraer ID de campaña de la respuesta",
+					"if (pm.response.code === 200 || pm.response.code === 201) {",
+					"    const responseJson = pm.response.json();",
+					"    if (responseJson.id) {",
+					"        pm.collectionVariables.set('campana_id', responseJson.id);",
+					"    }",
+					"}",
+					"",
+					"// Log de respuesta para debugging",
+					"console.log('Response Status:', pm.response.code);",
+					"console.log('Response Body:', pm.response.text());"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url_afiliaciones",
+			"value": "http://localhost:8001",
+			"type": "string"
+		},
+		{
+			"key": "base_url_marca",
+			"value": "http://localhost:8002",
+			"type": "string"
+		},
+		{
+			"key": "base_url_influencer",
+			"value": "http://localhost:8003",
+			"type": "string"
+		},
+		{
+			"key": "base_url_tracking",
+			"value": "http://localhost:8004",
+			"type": "string"
+		},
+		{
+			"key": "marca_id",
+			"value": "123e4567-e89b-12d3-a456-426614174000",
+			"type": "string"
+		},
+		{
+			"key": "campana_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
