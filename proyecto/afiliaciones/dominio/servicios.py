@@ -4,6 +4,7 @@ from .entidades import Campana
 from .repositorios import RepositorioCampana
 from .reglas import PresupuestoDebeSerPositivo, CampanaDebeTenerNombre
 from .excepciones import PresupuestoInvalidoExcepcion, EstadoCampanaInvalidoExcepcion
+from .objetos_valor import TipoCampana
 
 
 class ServicioCampana:
@@ -24,7 +25,7 @@ class ServicioCampana:
             id_marca=id_marca,
             nombre=nombre,
             descripcion=descripcion,
-            tipo=tipo,
+            tipo=TipoCampana(tipo),
             presupuesto=presupuesto
         )
 
