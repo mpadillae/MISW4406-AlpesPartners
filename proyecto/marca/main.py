@@ -1,7 +1,9 @@
+import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
+import threading
 from infraestructura.consumidores import iniciar_consumidores
 
 app = FastAPI(
@@ -25,10 +27,6 @@ async def health_check():
     return {"status": "healthy", "service": "marca"}
 
 
-@app.on_event("startup")
-async def startup_event():
-    # Iniciar consumidores de eventos
-    await iniciar_consumidores()
-
 if __name__ == "__main__":
+    threading.Thread(target=iniciar_consumidores).start()
     uvicorn.run(app, host="0.0.0.0", port=8000)

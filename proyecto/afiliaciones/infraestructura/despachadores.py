@@ -1,8 +1,11 @@
+
 import pulsar
+from pulsar.schema import *
 import os
 import json
 from datetime import datetime
 from dominio.eventos import CampanaCreada, CampanaIniciada
+from infraestructura.schema.v1.eventos import EventoCampanaCreada, EventoCampanaIniciada
 
 
 class Despachador:
@@ -14,23 +17,27 @@ class Despachador:
         try:
             # Crear payload JSON para el evento
             if isinstance(evento, CampanaCreada):
-                payload = self._crear_payload_campana_creada(evento)
+                payload = EventoCampanaCreada(data=self._crear_payload_campana_creada(
+                    evento))
             elif isinstance(evento, CampanaIniciada):
-                payload = self._crear_payload_campana_iniciada(evento)
+                payload = EventoCampanaIniciada(data=self._crear_payload_campana_iniciada(
+                    evento))
             else:
                 raise ValueError(
                     f"Tipo de evento no soportado: {type(evento)}")
 
             # Crear productor (sin schema para usar JSON)
-            productor = self.cliente.create_producer(topico)
+            productor = self.cliente.create_producer(
+                topico, schema=AvroSchema(type(payload)))
 
             # Enviar mensaje como JSON
-            mensaje_json = json.dumps(payload)
-            productor.send(mensaje_json.encode('utf-8'))
+            productor.send(payload)
             print(f"Evento publicado en tópico {topico}: {evento}")
 
         except Exception as e:
             print(f"Error publicando evento: {e}")
+            import traceback
+            print(f"[AFILIACIONES] Traceback: {traceback.format_exc()}")
 
         finally:
             if 'productor' in locals():
