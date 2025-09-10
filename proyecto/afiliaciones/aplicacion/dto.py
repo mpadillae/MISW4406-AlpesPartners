@@ -9,7 +9,7 @@ class CrearCampanaRequest(BaseModel):
     nombre: str = Field(..., min_length=1, max_length=100)
     descripcion: str = Field(..., min_length=1, max_length=500)
     tipo: str = Field(...)
-    presupuesto: float = Field(..., gt=0)
+    presupuesto: float = Field(...)
 
 
 class CampanaResponse(BaseModel):

@@ -37,8 +37,8 @@ class CampanaMarca:
     _eventos: List = field(default_factory=list, init=False)
 
     def procesar_campana_creada(self, evento_data):
-        self.id_campana = evento_data.get('id_campana')
-        self.id_marca = evento_data.get('id_marca')
+        self.id_campana = uuid.UUID(evento_data.get('id_campana'))
+        self.id_marca = uuid.UUID(evento_data.get('id_marca'))
         self.nombre_campana = evento_data.get('nombre')
         self.estado = evento_data.get('estado')
         self.fecha_creacion = datetime.fromtimestamp(
