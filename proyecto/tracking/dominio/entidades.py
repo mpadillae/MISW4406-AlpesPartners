@@ -83,3 +83,10 @@ class EventoTracking:
 
     def obtener_eventos(self):
         return self._eventos.copy()
+
+    def procesar_campana_creada(self, evento_data):
+        self.id_campana = evento_data.get('id_campana')
+        self.tipo_evento = evento_data.get('tipo_evento')
+        self.datos = evento_data.get('datos')
+        self.fecha_evento = datetime.fromtimestamp(
+            evento_data.get('fecha_evento', 0) / 1000)

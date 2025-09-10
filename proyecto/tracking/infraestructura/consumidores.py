@@ -1,106 +1,86 @@
+import traceback
 import pulsar
+import _pulsar
 from pulsar.schema import *
 import os
 import json
 import asyncio
 from datetime import datetime
 from dominio.servicios import ServicioTracking
-from .repositorios import RepositorioMetricasCampanaSQLAlchemy, RepositorioEventoTrackingSQLAlchemy
+from infraestructura.schema.v1.eventos import EventoCampanaCreada
+from .repositorios import RepositorioEventoTrackingSQLAlchemy, RepositorioMetricasCampanaSQLAlchemy
 
 
 class ConsumidorEventosTracking:
     def __init__(self):
         self.pulsar_url = os.getenv("PULSAR_URL", "pulsar://localhost:6650")
-        self.cliente = pulsar.Client(self.pulsar_url)
 
         # Inicializar servicios
-        repositorio_metricas = RepositorioMetricasCampanaSQLAlchemy()
-        repositorio_eventos = RepositorioEventoTrackingSQLAlchemy()
+        repositorio_tracking = RepositorioEventoTrackingSQLAlchemy()
+        repositorio_campana = RepositorioMetricasCampanaSQLAlchemy()
         self.servicio = ServicioTracking(
-            repositorio_metricas, repositorio_eventos)
+            repositorio_tracking, repositorio_campana)
 
-    async def consumir_eventos_campana(self, topico: str, suscripcion: str):
+    def consumir_eventos_campana(self, topico: str, suscripcion: str):
         try:
-            # Crear esquema Avro para eventos de campaña
-            schema = AvroSchema({
-                "type": "record",
-                "name": "EventoCampana",
-                "fields": [
-                    {"name": "id", "type": "string"},
-                    {"name": "id_campana", "type": "string"},
-                    {"name": "id_marca", "type": "string"},
-                    {"name": "nombre", "type": "string"},
-                    {"name": "descripcion", "type": "string"},
-                    {"name": "tipo", "type": "string"},
-                    {"name": "estado", "type": "string"},
-                    {"name": "fecha_creacion", "type": "long"},
-                    {"name": "presupuesto", "type": "double"}
-                ]
-            })
+            cliente = pulsar.Client(self.pulsar_url)
 
             # Crear consumidor
-            consumidor = self.cliente.subscribe(
-                topico, suscripcion, schema=schema)
-
-            print(f"[TRACKING] Consumiendo eventos del tópico {topico}...")
+            consumidor = cliente.subscribe(
+                topico,
+                consumer_type=_pulsar.ConsumerType.Shared,
+                subscription_name=suscripcion,
+                schema=AvroSchema(EventoCampanaCreada))
 
             while True:
-                try:
-                    mensaje = consumidor.receive(timeout_millis=1000)
-                    if mensaje:
-                        evento_data = mensaje.value()
-                        print(f"[TRACKING] Evento recibido: {evento_data}")
 
-                        # Procesar evento según el tipo
-                        await self._procesar_evento_campana(evento_data)
+                mensaje = consumidor.receive()
+                evento_data = mensaje.value()
 
-                        # Confirmar mensaje
-                        consumidor.acknowledge(mensaje)
+                print(f"[TRACKING] Evento recibido: {evento_data.data}")
 
-                except pulsar.Timeout:
-                    # Timeout normal, continuar
-                    continue
-                except Exception as e:
-                    print(f"[TRACKING] Error procesando mensaje: {e}")
-                    consumidor.negative_acknowledge(mensaje)
+                # Procesar evento según el tipo
+                self._procesar_evento_campana(evento_data.data.__dict__)
+
+                # Confirmar mensaje
+
+                consumidor.acknowledge(mensaje)
 
         except Exception as e:
             print(f"[TRACKING] Error en consumidor: {e}")
-        finally:
-            if 'consumidor' in locals():
-                consumidor.close()
+            traceback.print_exc()
 
-    async def _procesar_evento_campana(self, evento_data):
+            if cliente:
+                cliente.close()
+
+    def _procesar_evento_campana(self, evento_data):
+
         try:
             # Determinar tipo de evento por los campos presentes
             if 'nombre' in evento_data and 'descripcion' in evento_data:
                 # Es un evento de campaña creada
                 print(
                     f"[TRACKING] Procesando campaña creada: {evento_data['nombre']}")
-                metricas = self.servicio.procesar_campana_creada(evento_data)
+                tracking = self.servicio.procesar_campana_creada(evento_data)
                 print(
-                    f"[TRACKING] Métricas creadas y guardadas: {metricas.id}")
+                    f"[TRACKING] Tracking procesado y guardado: {tracking.id}")
             elif 'fecha_inicio' in evento_data:
                 # Es un evento de campaña iniciada
                 print(
                     f"[TRACKING] Procesando campaña iniciada: {evento_data['id_campana']}")
-                metricas = self.servicio.procesar_campana_iniciada(evento_data)
-                if metricas:
-                    print(f"[TRACKING] Métricas actualizadas: {metricas.id}")
+                tracking = self.servicio.procesar_campana_iniciada(evento_data)
+                if tracking:
+                    print(f"[TRACKING] Tracking actualizado: {tracking.id}")
                 else:
-                    print(f"[TRACKING] Métricas no encontradas para actualizar")
+                    print(f"[TRACKING] Tracking no encontrado para actualizar")
         except Exception as e:
             print(f"[TRACKING] Error procesando evento: {e}")
+            traceback.print_exc()
 
 
-async def iniciar_consumidores():
+def iniciar_consumidores():
     consumidor = ConsumidorEventosTracking()
 
     # Crear tareas para consumir eventos de campaña
-    tareas = [
-        asyncio.create_task(consumidor.consumir_eventos_campana(
-            "eventos-campana", "tracking-subscription")),
-    ]
-
-    # Ejecutar todas las tareas
-    await asyncio.gather(*tareas)
+    consumidor.consumir_eventos_campana(
+        "eventos-campana", "tracking-subscription")

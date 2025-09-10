@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-import os
-from api.endpoints import router as tracking_router
+import threading
 from infraestructura.consumidores import iniciar_consumidores
+from api.endpoints import router as tracking_router
 
 app = FastAPI(
     title="Tracking Service",
@@ -20,6 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Incluir routers
 app.include_router(tracking_router, prefix="/tracking", tags=["tracking"])
 
@@ -29,10 +30,6 @@ async def health_check():
     return {"status": "healthy", "service": "tracking"}
 
 
-@app.on_event("startup")
-async def startup_event():
-    # Iniciar consumidores de eventos
-    await iniciar_consumidores()
-
 if __name__ == "__main__":
+    threading.Thread(target=iniciar_consumidores).start()
     uvicorn.run(app, host="0.0.0.0", port=8000)

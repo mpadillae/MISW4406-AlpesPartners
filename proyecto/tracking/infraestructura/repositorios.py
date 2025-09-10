@@ -31,7 +31,7 @@ class EventoTrackingDB(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True)
     id_campana = Column(UUID(as_uuid=True), nullable=False)
-    tipo_evento = Column(String(50), nullable=False)
+    tipo_evento = Column(String(50), nullable=True)
     datos = Column(JSON, nullable=False)
     fecha_evento = Column(DateTime, nullable=False)
 
@@ -139,6 +139,7 @@ class RepositorioEventoTrackingSQLAlchemy(RepositorioEventoTracking):
         return self._db_a_entidad(evento_db)
 
     def _entidad_a_db(self, evento: EventoTracking) -> EventoTrackingDB:
+        print(f"[RepositorioEventoTrackingSQLAlchemy] Entidad a DB: {evento}")
         return EventoTrackingDB(
             id=evento.id,
             id_campana=evento.id_campana,

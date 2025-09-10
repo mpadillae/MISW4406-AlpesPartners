@@ -12,7 +12,7 @@ class ServicioTracking:
 
     def procesar_campana_creada(self, evento_data: dict) -> MetricasCampana:
         # Crear métricas de campaña
-        metricas = MetricasCampana()
+        metricas = EventoTracking()
         metricas.procesar_campana_creada(evento_data)
 
         # Guardar en repositorio
