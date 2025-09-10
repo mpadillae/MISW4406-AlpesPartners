@@ -1,5 +1,4 @@
 import pulsar
-from pulsar.schema import *
 import os
 import json
 from datetime import datetime
@@ -13,59 +12,29 @@ class Despachador:
 
     async def publicar_evento(self, evento, topico: str):
         try:
-            # Crear esquema Avro para el evento
+            # Crear payload JSON para el evento
             if isinstance(evento, CampanaCreada):
-                schema = self._crear_esquema_campana_creada()
                 payload = self._crear_payload_campana_creada(evento)
             elif isinstance(evento, CampanaIniciada):
-                schema = self._crear_esquema_campana_iniciada()
                 payload = self._crear_payload_campana_iniciada(evento)
             else:
                 raise ValueError(
                     f"Tipo de evento no soportado: {type(evento)}")
 
-            # Crear productor
-            productor = self.cliente.create_producer(topico, schema=schema)
+            # Crear productor (sin schema para usar JSON)
+            productor = self.cliente.create_producer(topico)
 
-            # Enviar mensaje
-            productor.send(payload)
+            # Enviar mensaje como JSON
+            mensaje_json = json.dumps(payload)
+            productor.send(mensaje_json.encode('utf-8'))
             print(f"Evento publicado en tópico {topico}: {evento}")
 
         except Exception as e:
             print(f"Error publicando evento: {e}")
+
         finally:
             if 'productor' in locals():
                 productor.close()
-
-    def _crear_esquema_campana_creada(self):
-        return AvroSchema({
-            "type": "record",
-            "name": "CampanaCreadaEvent",
-            "fields": [
-                {"name": "id", "type": "string"},
-                {"name": "id_campana", "type": "string"},
-                {"name": "id_marca", "type": "string"},
-                {"name": "nombre", "type": "string"},
-                {"name": "descripcion", "type": "string"},
-                {"name": "tipo", "type": "string"},
-                {"name": "estado", "type": "string"},
-                {"name": "fecha_creacion", "type": "long"},
-                {"name": "presupuesto", "type": "double"}
-            ]
-        })
-
-    def _crear_esquema_campana_iniciada(self):
-        return AvroSchema({
-            "type": "record",
-            "name": "CampanaIniciadaEvent",
-            "fields": [
-                {"name": "id", "type": "string"},
-                {"name": "id_campana", "type": "string"},
-                {"name": "id_marca", "type": "string"},
-                {"name": "estado", "type": "string"},
-                {"name": "fecha_inicio", "type": "long"}
-            ]
-        })
 
     def _crear_payload_campana_creada(self, evento: CampanaCreada):
         return {
